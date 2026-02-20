@@ -10,6 +10,8 @@ public class BankSystem {
 	}
 
 	public void register(String firstName, String lastName, String password, double balance) {
+		Customer newCustomer = new Customer(firstName, lastName, password, balance);
+		this.customers.add(newCustomer);
 	}
 
 	// Useful methods for login and register //
