@@ -3,9 +3,10 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class TestBank {
-
+    
     public static void main(String[] args) {
-
+        // Begining of 3 Main Tasks --------------------------- //
+        
         // ===============================
         // HEAP ALLOCATOR DEMONSTRATION
         // ===============================
@@ -50,7 +51,7 @@ public class TestBank {
 
         System.out.println("Final Balance: " + sharedAccount.getBalance());
 
-        System.out.println("\n===== PRIMITIVE VS REFERENCE =====");
+        System.out.println("\n===== PARAMETER PASSING DEMON =====");
 
         // Primitive example
         double prAmount = 1000;
@@ -81,9 +82,8 @@ public class TestBank {
 
         System.out.println("customer1: " + customer1);
         System.out.println("customer2: " + customer2);
+        // End of 3 Main Tasks --------------------------- //
 
-        System.out.println("\nProgram Finished.");
-        
         // ------------------------------------------------------------------------ //
         BankAccount account = new BankAccount(1000.00);
         Scanner scanner = new Scanner(System.in);
