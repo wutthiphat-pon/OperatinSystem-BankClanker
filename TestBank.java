@@ -9,21 +9,80 @@ public class TestBank {
         // ===============================
         // HEAP ALLOCATOR DEMONSTRATION
         // ===============================
-
+        // 1) Multiple accounts
         BankAccount acc1 = new BankAccount(1000.00);
         BankAccount acc2 = new BankAccount(500.00);
         BankAccount acc3 = new BankAccount(2000.00);
 
         System.out.println("Objects created.");
 
-        // Reference reassignment
+        // 3) Reference reassignment
         acc1 = acc2;
         System.out.println("acc1 reassigned to acc2.");
 
-        // Garbage collection eligibility
+        // 4) Garbage collection eligibility
         acc1 = null;
         acc2 = null;
         System.out.println("acc1 and acc2 set to null.");
+
+        System.out.println("\n=== Concurrency Demonstration ===");
+        // Shared object in HEAP
+        BankAccount sharedAccount = new BankAccount(1000);
+
+        // Create threads that access same object
+        Thread t1 = new Thread(() -> sharedAccount.withdraw(300), "Thread-1");
+        Thread t2 = new Thread(() -> sharedAccount.withdraw(300), "Thread-2");
+        Thread t3 = new Thread(() -> sharedAccount.deposit(200), "Thread-3");
+
+        // Start threads (concurrent execution)
+        t1.start();
+        t2.start();
+        t3.start();
+
+        // Wait for completion (thread scheduling control)
+        try {
+            t1.join();
+            t2.join();
+            t3.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Final Balance: " + sharedAccount.getBalance());
+
+        System.out.println("\n===== PRIMITIVE VS REFERENCE =====");
+
+        // Primitive example
+        double prAmount = 1000;
+        double copyAmount = prAmount;
+
+        copyAmount = copyAmount + 500;
+
+        System.out.println("Original primitive amount: " + prAmount);
+        System.out.println("Modified copy: " + copyAmount);
+
+
+        // Reference example
+        BankAccount ref1 = new BankAccount(3000);
+        BankAccount ref2 = ref1;
+
+        ref2.deposit(1000);
+
+        System.out.println("ref1 balance after ref2 deposit: " + ref1.getBalance());
+        System.out.println("ref2 balance: " + ref2.getBalance());
+
+
+        System.out.println("\n===== STRING IMMUTABILITY =====");
+
+        String customer1 = "Alice Smith";
+        String customer2 = customer1;
+
+        customer1 = customer1 + " (VIP)";
+
+        System.out.println("customer1: " + customer1);
+        System.out.println("customer2: " + customer2);
+
+        System.out.println("\nProgram Finished.");
         
         // ------------------------------------------------------------------------ //
         BankAccount account = new BankAccount(1000.00);
@@ -114,31 +173,6 @@ public class TestBank {
             }
         }
         System.out.print("Transaction success");
-
-        System.out.println("\n=== Concurrency Demonstration ===");
-        // Shared object in HEAP
-        BankAccount sharedAccount = new BankAccount(1000);
-
-        // Create threads that access same object
-        Thread t1 = new Thread(() -> sharedAccount.withdraw(300), "Thread-1");
-        Thread t2 = new Thread(() -> sharedAccount.withdraw(300), "Thread-2");
-        Thread t3 = new Thread(() -> sharedAccount.deposit(200), "Thread-3");
-
-        // Start threads (concurrent execution)
-        t1.start();
-        t2.start();
-        t3.start();
-
-        // Wait for completion (thread scheduling control)
-        try {
-            t1.join();
-            t2.join();
-            t3.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println("Final Balance: " + sharedAccount.getBalance());
 
     }
     
