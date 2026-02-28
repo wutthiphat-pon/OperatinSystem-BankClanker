@@ -1,41 +1,109 @@
-public class BankAccount {
+public class BankAccount implements Runnable {
 
     private double balance;
-    
-    
 
+    // Used only for thread demonstration
+    private double transactionAmount;
+    private boolean isDeposit;
+
+    // Normal constructor
     public BankAccount(double balance) {
         this.balance = balance;
-        
     }
 
-    public double getBalance() {
+    // Constructor used for concurrency demo
+    public BankAccount(double balance, double transactionAmount, boolean isDeposit) {
+        this.balance = balance;
+        this.transactionAmount = transactionAmount;
+        this.isDeposit = isDeposit;
+    }
+
+    public synchronized double getBalance() {
         return balance;
     }
 
-    public void deposit(double amount) {
+    public synchronized void deposit(double amount) {
 
-       
-            balance += amount;
-            System.out.println("Deposit successful.");
-        
+        try {
+            Thread.sleep(100); // Scheduling simulation
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        balance += amount;
+
+        System.out.println(Thread.currentThread().getName() +
+                " deposited " + amount +
+                " | Balance: " + balance);
     }
 
-    public void withdraw(double amount) {
+    public synchronized void withdraw(double amount) {
 
-        if(balance >=amount) {
+        if (balance >= amount) {
+
+            try {
+                Thread.sleep(100); // Scheduling simulation
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
             balance -= amount;
-            System.out.println("Withdraw successful.");
-            
-        }else System.out.println("You broke bruh.");
-            
+
+            System.out.println(Thread.currentThread().getName() +
+                    " withdrew " + amount +
+                    " | Balance: " + balance);
+
+        } else {
+            System.out.println(Thread.currentThread().getName() +
+                    " failed withdrawal. Insufficient balance.");
+        }
     }
-    
-    public void transfer(double amount) {
-	   
-   } 
-    
+
+    // Synchronized transfer method to ensure thread safety during transfers
+    public synchronized void transfer(String transFName, String transLName, double amount) {
+
+        for (Customer c : Customer.getCustomers()) {
+
+            if (c.getFirstName().equalsIgnoreCase(transFName)
+                    && c.getLastName().equalsIgnoreCase(transLName)) {
+
+                if (balance >= amount) {
+
+                    try {
+                        Thread.sleep(100); // Scheduling simulation
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    balance -= amount;
+
+                    // Deposit to recipient account (also synchronized)
+                    c.getAccount().deposit(amount);
+
+                    System.out.println(Thread.currentThread().getName() +
+                            " transferred " + amount +
+                            " to " + transFName + " " + transLName +
+                            " | Balance: " + balance);
+
+                } else {
+                    System.out.println("Insufficient balance for transfer.");
+                }
+                return;
+            }
+        }
+
+        System.out.println("Recipient not found: "
+                + transFName + " " + transLName);
+    }
+
+    // Thread execution behavior
+    @Override
+    public void run() {
+
+        if (isDeposit) {
+            deposit(transactionAmount);
+        } else {
+            withdraw(transactionAmount);
+        }
+    }
 }
-
-
-   
