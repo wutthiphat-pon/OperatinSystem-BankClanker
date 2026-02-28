@@ -5,6 +5,26 @@ import java.util.Scanner;
 public class TestBank {
 
     public static void main(String[] args) {
+
+        // ===============================
+        // HEAP ALLOCATOR DEMONSTRATION
+        // ===============================
+
+        BankAccount acc1 = new BankAccount(1000.00);
+        BankAccount acc2 = new BankAccount(500.00);
+        BankAccount acc3 = new BankAccount(2000.00);
+
+        System.out.println("Objects created.");
+
+        // Reference reassignment
+        acc1 = acc2;
+        System.out.println("acc1 reassigned to acc2.");
+
+        // Garbage collection eligibility
+        acc1 = null;
+        acc2 = null;
+        System.out.println("acc1 and acc2 set to null.");
+        
         // ------------------------------------------------------------------------ //
         BankAccount account = new BankAccount(1000.00);
         Scanner scanner = new Scanner(System.in);
