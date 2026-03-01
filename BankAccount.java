@@ -1,4 +1,4 @@
-public class BankAccount implements Runnable {
+public class BankAccount implements iBankAccount {
 
     private double balance;
 
@@ -94,16 +94,5 @@ public class BankAccount implements Runnable {
 
         System.out.println("Recipient not found: "
                 + transFName + " " + transLName);
-    }
-
-    // Thread execution behavior
-    @Override
-    public void run() {
-
-        if (isDeposit) {
-            deposit(transactionAmount);
-        } else {
-            withdraw(transactionAmount);
-        }
     }
 }
