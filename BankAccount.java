@@ -1,7 +1,7 @@
 public class BankAccount implements iBankAccount {
 
     private double balance;
-
+    private TransactionLimiter limiter;
     // Used only for thread demonstration
     private double transactionAmount;
     private boolean isDeposit;
@@ -9,6 +9,7 @@ public class BankAccount implements iBankAccount {
     // Normal constructor
     public BankAccount(double balance) {
         this.balance = balance;
+        this.limiter = new TransactionLimiter(5, 500000);
     }
 
     // Constructor used for concurrency demo
@@ -24,13 +25,20 @@ public class BankAccount implements iBankAccount {
 
     public synchronized void deposit(double amount) {
 
+        if (!limiter.isAllowed(amount)) {
+            System.out.println("Transaction limit exceeded.");
+            return;
+        }
+
         try {
-            Thread.sleep(100); // Scheduling simulation
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         balance += amount;
+
+        limiter.transaction(amount);
 
         System.out.println(Thread.currentThread().getName() +
                 " deposited " + amount +
@@ -38,6 +46,11 @@ public class BankAccount implements iBankAccount {
     }
 
     public synchronized void withdraw(double amount) {
+
+        if (!limiter.isAllowed(amount)) {
+            System.out.println("Transaction limit exceeded.");
+            return;
+        }
 
         if (balance >= amount) {
 

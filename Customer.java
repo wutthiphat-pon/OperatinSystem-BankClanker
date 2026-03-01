@@ -6,6 +6,7 @@ public class Customer {
     private String last_Name;
     private String password;
     private BankAccount account;
+    
 
     private static ArrayList<Customer> customers = new ArrayList<>();
 
